@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Data Analysis — Case Study | Swar Parikh</title>
+<meta name="description" content="Case study: exploratory data analysis of IPL match data (2008–2023) using Python, Pandas, and Seaborn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --carbon:#060505; --panel:#0D0B0B; --panel-2:#141010; --grid:#241C1C; --grid-soft:#1A1414;
+    --bone:#F2F0EA; --bone-dim:#A79E96; --bone-faint:#6E645E;
+    --crimson:#D7263D; --crimson-light:#F3A9B4; --radius:2px; --maxw:900px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--carbon); color:var(--bone); font-family:'Inter',sans-serif; line-height:1.7; -webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:var(--crimson); text-decoration:none;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  ::selection{background:var(--crimson); color:var(--bone);}
+
+  header{padding:26px 0; border-bottom:1px solid var(--grid);}
+  header .wrap{display:flex; justify-content:space-between; align-items:center; max-width:1100px;}
+  .back-link{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone-dim); display:flex; align-items:center; gap:8px;}
+  .back-link:hover{color:var(--crimson);}
+  .site-logo{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--bone-dim);}
+
+  .hero{padding:90px 0 60px; position:relative; overflow:hidden;}
+  .hero .pattern-bg{position:absolute; inset:0; opacity:0.25; z-index:0;}
+  .hero .wrap{position:relative; z-index:1;}
+  .meta-row{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-faint); display:flex; gap:18px; flex-wrap:wrap; margin-bottom:22px;}
+  .meta-row span{display:flex; align-items:center; gap:6px;}
+  h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(32px,5vw,54px); line-height:1.08; margin-bottom:20px; max-width:760px;}
+  .hero .sub{color:var(--bone-dim); font-size:16.5px; max-width:640px; margin-bottom:28px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag-row span{font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px; color:var(--bone-dim);}
+
+  .metric-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--grid); border:1px solid var(--grid); margin:44px 0 0;}
+  .metric-strip .m{background:var(--panel); padding:22px 20px;}
+  .metric-strip .m .n{font-family:'Fraunces',serif; font-size:24px; color:var(--crimson); font-weight:600;}
+  .metric-strip .m .l{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--bone-faint); text-transform:uppercase; letter-spacing:0.04em; margin-top:5px;}
+
+  main{padding-bottom:100px;}
+  .block{padding:44px 0; border-bottom:1px solid var(--grid-soft);}
+  .block:last-child{border-bottom:none;}
+  .block .label{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--crimson); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;}
+  .block h2{font-family:'Fraunces',serif; font-size:26px; font-weight:600; margin-bottom:16px;}
+  .block p{color:var(--bone-dim); font-size:15px; margin-bottom:14px; max-width:680px;}
+  .block ul{list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+  .block li{font-size:14.5px; color:var(--bone-dim); padding-left:20px; position:relative; max-width:680px;}
+  .block li::before{content:"›"; position:absolute; left:0; color:var(--crimson);}
+  .cols-2{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .cols-2 h3{font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:10px;}
+  @media (max-width:700px){ .cols-2{grid-template-columns:1fr;} .metric-strip{grid-template-columns:1fr;} }
+
+  .tech-grid{display:flex; flex-wrap:wrap; gap:10px;}
+  .tech-grid span{font-family:'JetBrains Mono',monospace; font-size:12.5px; border:1px solid var(--grid); padding:8px 16px; border-radius:20px; color:var(--bone);}
+
+  footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
+  footer a:hover{color:var(--crimson);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html#projects" class="back-link">← Back to Portfolio</a>
+    <span class="site-logo">SWAR PARIKH / CASE STUDY</span>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="pattern-bg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice"><defs><pattern id="grid1" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M 34 0 L 0 0 0 34" fill="none" stroke="#D7263D" stroke-width="0.6" opacity="0.4"/></pattern></defs><rect width="800" height="400" fill="url(#grid1)"/></svg>
+  <div class="wrap">
+    <div class="meta-row">
+      <span>2025 · Personal Project</span>
+      <span>Category: Data Analytics / EDA</span>
+    </div>
+    <h1>IPL Data Analysis — Case Study</h1>
+    <p class="sub">Exploratory data analysis of Indian Premier League match data from 2008–2023, uncovering team performance, player, toss, venue, and seasonal trends through Python-driven statistical analysis and visualization.</p>
+    <div class="tag-row">
+      <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Seaborn</span><span>Jupyter Notebook</span>
+    </div>
+    <div class="metric-strip">
+      <div class="m"><div class="n">15+</div><div class="l">IPL Seasons Covered</div></div>
+      <div class="m"><div class="n">7</div><div class="l">Analysis Dimensions</div></div>
+      <div class="m"><div class="n">7</div><div class="l">Visualization Types</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="block">
+    <div class="label">Overview</div>
+    <h2>What this project is</h2>
+    <p>This project performs exploratory data analysis on the IPL (Indian Premier League) dataset to uncover meaningful insights into team performance, player statistics, match outcomes, venue trends, and seasonal records across 2008–2023. Using Python and standard data analysis libraries, raw match data is transformed into actionable insights through statistical analysis and visualization.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Business Problem</div>
+    <h2>Why it matters</h2>
+    <p>Fifteen-plus seasons of IPL data contain patterns that are useful to teams, analysts, and fans alike — which franchises perform best under which conditions, how much the toss actually influences outcomes, which venues favor which style of play, and which players are the most consistent match-winners. Buried inside raw match-by-match CSVs, none of that is visible without structured analysis.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Objective</div>
+    <h2>What the analysis set out to answer</h2>
+    <ul>
+      <li>Analyze IPL match history across all available seasons</li>
+      <li>Explore team performance and win percentage trends across seasons</li>
+      <li>Identify top-performing and most consistent players</li>
+      <li>Study the impact of winning the toss on match outcomes</li>
+      <li>Discover venue-wise winning trends</li>
+      <li>Surface seasonal statistics and performance evolution over time</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Dataset</div>
+    <h2>What the analysis is built on</h2>
+    <p>Publicly available historical IPL match datasets covering match information, team details, venue information, toss results, match winners, Player of the Match awards, match dates, and season information across the tournament's history.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Methodology</div>
+    <h2>How it was approached</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Process</h3>
+        <ul>
+          <li>Raw dataset ingestion</li>
+          <li>Data cleaning and preprocessing</li>
+          <li>Exploratory data analysis</li>
+          <li>Statistical insight extraction</li>
+          <li>Visualization design</li>
+          <li>Translation into business-style insights</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Analysis performed</h3>
+        <ul>
+          <li>Team analysis — matches played, win %, home vs. away</li>
+          <li>Toss analysis — win frequency, decision impact</li>
+          <li>Venue analysis — matches by stadium, winning trends</li>
+          <li>Player analysis — Player of the Match consistency</li>
+          <li>Season and match-level trend analysis</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Technology Used</div>
+    <h2>Tools & stack</h2>
+    <div class="tech-grid">
+      <span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Seaborn</span><span>Jupyter Notebook</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Key Insights</div>
+    <h2>What came out of it</h2>
+    <ul>
+      <li>Identified the teams with the highest win percentage across IPL history</li>
+      <li>Quantified how much winning the toss actually shifts match outcomes</li>
+      <li>Surfaced the most successful IPL franchises and best-performing venues</li>
+      <li>Ranked players by Player of the Match consistency</li>
+      <li>Mapped seasonal trends and win-pattern shifts across IPL history</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Next Step</div>
+    <h2>See it or take it further</h2>
+    <p>The full notebook, dataset, and visualizations are on GitHub.</p>
+    <p><a href="https://github.com/swarparikh/IPL-Data-Analysis" target="_blank" rel="noopener">View the repository on GitHub →</a></p>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Swar Parikh</span>
+  <a href="index.html#projects">← Back to Portfolio</a>
+</footer>
+
+</body>
+</html>

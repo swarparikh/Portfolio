@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Election Analysis — Case Study | Swar Parikh</title>
+<meta name="description" content="Case study: 6-dashboard Power BI solution analyzing the India General Election 2024 using SQL, Excel, Power Query, and DAX.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --carbon:#060505; --panel:#0D0B0B; --panel-2:#141010; --grid:#241C1C; --grid-soft:#1A1414;
+    --bone:#F2F0EA; --bone-dim:#A79E96; --bone-faint:#6E645E;
+    --crimson:#D7263D; --crimson-light:#F3A9B4; --radius:2px; --maxw:900px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--carbon); color:var(--bone); font-family:'Inter',sans-serif; line-height:1.7; -webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:var(--crimson); text-decoration:none;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  ::selection{background:var(--crimson); color:var(--bone);}
+
+  header{padding:26px 0; border-bottom:1px solid var(--grid);}
+  header .wrap{display:flex; justify-content:space-between; align-items:center; max-width:1100px;}
+  .back-link{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone-dim); display:flex; align-items:center; gap:8px;}
+  .back-link:hover{color:var(--crimson);}
+  .site-logo{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--bone-dim);}
+
+  .hero{padding:90px 0 60px; position:relative; overflow:hidden;}
+  .hero .pattern-bg{position:absolute; inset:0; opacity:0.2; z-index:0;}
+  .hero .wrap{position:relative; z-index:1;}
+  .meta-row{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-faint); display:flex; gap:18px; flex-wrap:wrap; margin-bottom:22px;}
+  h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(32px,5vw,54px); line-height:1.08; margin-bottom:20px; max-width:760px;}
+  .hero .sub{color:var(--bone-dim); font-size:16.5px; max-width:640px; margin-bottom:28px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag-row span{font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px; color:var(--bone-dim);}
+
+  .metric-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--grid); border:1px solid var(--grid); margin:44px 0 0;}
+  .metric-strip .m{background:var(--panel); padding:22px 20px;}
+  .metric-strip .m .n{font-family:'Fraunces',serif; font-size:24px; color:var(--crimson); font-weight:600;}
+  .metric-strip .m .l{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--bone-faint); text-transform:uppercase; letter-spacing:0.04em; margin-top:5px;}
+
+  main{padding-bottom:100px;}
+  .block{padding:44px 0; border-bottom:1px solid var(--grid-soft);}
+  .block:last-child{border-bottom:none;}
+  .block .label{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--crimson); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;}
+  .block h2{font-family:'Fraunces',serif; font-size:26px; font-weight:600; margin-bottom:16px;}
+  .block p{color:var(--bone-dim); font-size:15px; margin-bottom:14px; max-width:680px;}
+  .block ul{list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+  .block li{font-size:14.5px; color:var(--bone-dim); padding-left:20px; position:relative; max-width:680px;}
+  .block li::before{content:"›"; position:absolute; left:0; color:var(--crimson);}
+  .cols-2{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .cols-2 h3{font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:10px;}
+  @media (max-width:700px){ .cols-2{grid-template-columns:1fr;} .metric-strip{grid-template-columns:1fr;} }
+
+  .dash-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--grid); border:1px solid var(--grid); margin-top:10px;}
+  .dash-grid .d{background:var(--panel); padding:20px 22px;}
+  .dash-grid .d .idx{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--bone-faint); margin-bottom:6px;}
+  .dash-grid .d h4{font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:6px;}
+  .dash-grid .d p{font-size:13px; margin-bottom:0;}
+  @media (max-width:700px){ .dash-grid{grid-template-columns:1fr;} }
+
+  .tech-grid{display:flex; flex-wrap:wrap; gap:10px;}
+  .tech-grid span{font-family:'JetBrains Mono',monospace; font-size:12.5px; border:1px solid var(--grid); padding:8px 16px; border-radius:20px; color:var(--bone);}
+
+  footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
+  footer a:hover{color:var(--crimson);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html#projects" class="back-link">← Back to Portfolio</a>
+    <span class="site-logo">SWAR PARIKH / CASE STUDY</span>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="pattern-bg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice"><defs><pattern id="lines1" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M0 26 L26 0" stroke="#F2F0EA" stroke-width="0.5" opacity="0.25"/></pattern></defs><rect width="800" height="400" fill="url(#lines1)"/></svg>
+  <div class="wrap">
+    <div class="meta-row">
+      <span>2024 · Personal Project</span>
+      <span>Category: Business Intelligence / Power BI</span>
+    </div>
+    <h1>India Election Analysis — Case Study</h1>
+    <p class="sub">A 6-dashboard interactive Power BI solution analyzing the India General Election Results 2024 — alliance seat share, state-level results, constituency detail, and candidate-level margins.</p>
+    <div class="tag-row">
+      <span>Power BI</span><span>SQL</span><span>Excel</span><span>Power Query</span><span>DAX</span>
+    </div>
+    <div class="metric-strip">
+      <div class="m"><div class="n">6</div><div class="l">Interactive Dashboards</div></div>
+      <div class="m"><div class="n">3</div><div class="l">Source Datasets</div></div>
+      <div class="m"><div class="n">9</div><div class="l">Key Feature Areas</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="block">
+    <div class="label">Overview</div>
+    <h2>What this project is</h2>
+    <p>This project analyzes the India General Election Results 2024 using Power BI, providing interactive dashboards to explore election performance across alliances, states, constituencies, political parties, and candidates. The dashboard suite enables users to explore election trends through dynamic visualizations, drill-through reports, maps, KPIs, and filtering.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Business Problem</div>
+    <h2>Why it matters</h2>
+    <p>Election results data is large, granular, and scattered across constituency, party, and candidate levels — hard to interpret at a glance in raw form. Political analysts, journalists, and researchers need a way to move fluidly between the national picture and constituency-level detail without re-running manual analysis for every question.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Objective</div>
+    <h2>What the dashboard needed to deliver</h2>
+    <p>Design an interactive Power BI solution providing a national election overview, alliance-wise seat distribution, state-level political analysis, constituency-wise election insights, and candidate performance comparison — packaged as six fully interactive dashboards for political analysts, researchers, and the general public.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Dataset</div>
+    <h2>What the analysis is built on</h2>
+    <p>Structured election data across three source tables: overall election results, party-level results, and constituency-level data — covering winners, runners-up, vote share, postal and EVM votes, margins, and party/alliance affiliation.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Methodology</div>
+    <h2>How it was approached</h2>
+    <p>Raw election data was cleaned in Excel, transformed through Power Query ETL, and modeled in Power BI with DAX measures driving the KPIs. The final solution is split into six purpose-built dashboards:</p>
+    <div class="dash-grid">
+      <div class="d"><div class="idx">01</div><h4>Overview Analysis</h4><p>National KPIs — NDA, I.N.D.I.A, and independent seat counts, alliance comparison</p></div>
+      <div class="d"><div class="idx">02</div><h4>State Demographic Analysis</h4><p>State-wise map, majority alliance, constituency bubble map, drill-through</p></div>
+      <div class="d"><div class="idx">03</div><h4>Political Landscape by State</h4><p>State filter, party seat share, donut chart, alliance comparison</p></div>
+      <div class="d"><div class="idx">04</div><h4>Constituency Analysis</h4><p>Winner, runner-up, vote share, postal/EVM votes, margin of victory</p></div>
+      <div class="d"><div class="idx">05</div><h4>Details Grid</h4><p>Full interactive data table with export to Excel</p></div>
+      <div class="d"><div class="idx">06</div><h4>Landing Page</h4><p>Dashboard navigation with interactive cards and bookmarks</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Technology Used</div>
+    <h2>Tools & stack</h2>
+    <div class="tech-grid">
+      <span>Power BI</span><span>SQL</span><span>Excel</span><span>Power Query (ETL)</span><span>DAX</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Key Features</div>
+    <h2>What the dashboard supports</h2>
+    <ul>
+      <li>Interactive filters and cross-filtering across all six dashboards</li>
+      <li>Drill-through reports from national to constituency level</li>
+      <li>Dynamic KPIs and bookmark-based navigation</li>
+      <li>Map visualizations for state and constituency-level results</li>
+      <li>Full data export to Excel from the details grid</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Business Value</div>
+    <h2>Who this is built for</h2>
+    <p>Designed to help political analysts, election researchers, journalists, government agencies, students, and the general public understand election outcomes through interactive visual analytics rather than static reports.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Next Step</div>
+    <h2>See it or take it further</h2>
+    <p>The full dataset, Power BI file, and dashboard assets are on GitHub.</p>
+    <p><a href="https://github.com/swarparikh/India-Election-Analysis" target="_blank" rel="noopener">View the repository on GitHub →</a></p>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Swar Parikh</span>
+  <a href="index.html#projects">← Back to Portfolio</a>
+</footer>
+
+</body>
+</html>
