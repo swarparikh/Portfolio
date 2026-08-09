@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Swiggy Sales Dashboard — Case Study | Swar Parikh</title>
-<meta name="description" content="Case study: an interactive Excel dashboard analyzing Swiggy food delivery sales performance using Power Query, Power Pivot, and DAX.">
+<title>Swiggy Sales Analysis — Case Study | Swar Parikh</title>
+<meta name="description" content="Case study: Swiggy food delivery sales analyzed two ways — an interactive Excel dashboard (Power Query, Power Pivot, DAX) and a Python notebook (Pandas, Matplotlib, Plotly).">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -62,6 +62,22 @@
   .shot{width:100%; border:1px solid var(--grid); border-radius:4px; margin-top:18px; display:block;}
   .shot-caption{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint); margin-top:8px;}
 
+  .chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:18px;}
+  .chart-grid figure{margin:0; background:var(--panel); border:1px solid var(--grid); border-radius:4px; overflow:hidden;}
+  .chart-grid img{width:100%; display:block; background:#fff;}
+  .chart-grid figcaption{font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--bone-faint); padding:10px 12px; border-top:1px solid var(--grid);}
+  @media (max-width:700px){ .chart-grid{grid-template-columns:1fr;} }
+
+  .note-box{background:var(--panel); border:1px solid var(--grid); border-left:2px solid var(--crimson); padding:16px 18px; margin-top:18px; font-size:14px; color:var(--bone-dim); max-width:680px;}
+  .note-box strong{color:var(--bone);}
+
+  .nb-card{border:1px solid var(--grid); border-radius:6px; overflow:hidden; margin-top:22px; background:var(--panel);}
+  .nb-card .nb-bar{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:var(--panel-2); border-bottom:1px solid var(--grid);}
+  .nb-card .nb-bar span{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone); font-weight:500;}
+  .nb-card .nb-bar a{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-dim); display:flex; align-items:center; gap:6px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px;}
+  .nb-card .nb-bar a:hover{color:var(--crimson); border-color:var(--crimson);}
+  .nb-card iframe{width:100%; height:760px; border:none; display:block; background:#fff;}
+
   footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
   footer a:hover{color:var(--crimson);}
 </style>
@@ -80,17 +96,17 @@
   <div class="wrap">
     <div class="meta-row">
       <span>2026 · Personal Project</span>
-      <span>Category: Business Intelligence / Excel Analytics</span>
+      <span>Category: Business Intelligence / Data Analytics</span>
     </div>
-    <h1>Swiggy Sales Dashboard — Case Study</h1>
-    <p class="sub">An interactive Excel dashboard analyzing Swiggy's food delivery sales performance across India — revenue trends, customer satisfaction, food-type mix, and state and city-level performance, built entirely with Power Query, Power Pivot, and DAX.</p>
+    <h1>Swiggy Sales Analysis — Case Study</h1>
+    <p class="sub">Swiggy's food delivery sales across India, analyzed two ways from the same BRD — an interactive Excel dashboard built with Power Query, Power Pivot, and DAX, and a Python notebook rebuilding the same KPIs and charts with Pandas, Matplotlib, and Plotly.</p>
     <div class="tag-row">
-      <span>Excel</span><span>Power Query</span><span>Power Pivot</span><span>DAX</span><span>PivotTables</span><span>PivotCharts</span>
+      <span>Excel</span><span>Power Query</span><span>Power Pivot</span><span>DAX</span><span>Python</span><span>Pandas</span><span>Plotly</span>
     </div>
     <div class="metric-strip">
       <div class="m"><div class="n">₹53.01M</div><div class="l">Total Sales Analyzed</div></div>
       <div class="m"><div class="n">197.43K</div><div class="l">Total Orders</div></div>
-      <div class="m"><div class="n">7</div><div class="l">Interactive Charts</div></div>
+      <div class="m"><div class="n">2</div><div class="l">Independent Analyses</div></div>
     </div>
   </div>
 </section>
@@ -100,7 +116,7 @@
   <div class="block">
     <div class="label">Overview</div>
     <h2>What this project is</h2>
-    <p>This project is an interactive Excel dashboard built to analyze Swiggy's food delivery sales performance across India. Using Power Query, Power Pivot, and PivotTables/PivotCharts, sales, ratings, and order data are brought together into a single executive view — helping stakeholders track revenue trends, customer satisfaction, and regional performance at a glance, entirely within Excel.</p>
+    <p>This project analyzes Swiggy's food delivery sales performance across India — twice, two different ways. First as an interactive Excel dashboard (Power Query, Power Pivot, DAX, PivotCharts) built for executive reporting. Then again as a Python notebook (Pandas, NumPy, Matplotlib, Seaborn, Plotly) that independently rebuilds the same KPIs and charts from the same BRD, using code instead of a workbook.</p>
   </div>
 
   <div class="block">
@@ -176,17 +192,54 @@
 
   <div class="block">
     <div class="label">Dashboard</div>
-    <h2>The final result</h2>
+    <h2>The Excel result</h2>
     <p>KPI cards, slicers for Month/Category/Restaurant, and seven interactive charts combined into a single executive dashboard view.</p>
     <img class="shot" src="https://raw.githubusercontent.com/swarparikh/Swiggy-Sales-Analysis/main/Dashboard/Dashboard.png" alt="Swiggy Sales Dashboard in Excel">
     <div class="shot-caption">Final Excel dashboard — KPI cards, slicers, and 7 interactive visuals</div>
   </div>
 
   <div class="block">
+    <div class="label">Python Analysis</div>
+    <h2>Rebuilding it in code</h2>
+    <p>The same BRD was rebuilt independently in a Python notebook — loading the raw dataset with Pandas, computing all five KPIs directly from the raw fields, engineering a Veg/Non-Veg classifier from dish-name keywords, and charting every BRD requirement with Matplotlib, Seaborn, and Plotly Express.</p>
+    <div class="cols-2">
+      <div>
+        <h3>Process</h3>
+        <ul>
+          <li>Loaded and inspected data with Pandas (dtypes, describe, shape)</li>
+          <li>Calculated KPIs directly from raw fields</li>
+          <li>Engineered a Veg/Non-Veg feature via keyword matching on dish names</li>
+          <li>Grouped and aggregated by month, day, quarter, week, state, and city</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Libraries used</h3>
+        <ul>
+          <li>Pandas &amp; NumPy — cleaning, feature engineering, aggregation</li>
+          <li>Matplotlib — monthly and daily trend charts</li>
+          <li>Plotly Express — food-type split, state, city, and weekly charts</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin:32px 0 4px;">Live Notebook</h3>
+    <p>Scroll through the actual notebook below — markdown explanations, code cells, and every rendered chart, exactly as it runs top to bottom.</p>
+    <div class="nb-card">
+      <div class="nb-bar">
+        <span>Swiggy_Analysis.ipynb</span>
+        <a href="https://nbviewer.org/github/swarparikh/Swiggy-Sales-Analysis/blob/main/Notebook/Swiggy%20Analysis.ipynb" target="_blank" rel="noopener">Open ↗</a>
+      </div>
+      <iframe src="https://nbviewer.org/github/swarparikh/Swiggy-Sales-Analysis/blob/main/Notebook/Swiggy%20Analysis.ipynb" loading="lazy" title="Swiggy Sales Analysis Jupyter Notebook"></iframe>
+    </div>
+    <div class="note-box">
+      <strong>Note on Veg vs Non-Veg:</strong> the Python notebook classifies dishes by matching keywords in the dish name (chicken, mutton, biryani, etc.), while the Excel dashboard uses a pre-existing category field — the two methods produce different splits. It's a useful reminder that "Veg vs Non-Veg" isn't a single ground truth across a dataset unless the classification method is standardized first.
+    </div>
+  </div>
+
+  <div class="block">
     <div class="label">Technology Used</div>
     <h2>Tools & stack</h2>
     <div class="tech-grid">
-      <span>Excel</span><span>Power Query</span><span>Power Pivot</span><span>DAX</span><span>PivotTables</span><span>PivotCharts</span>
+      <span>Excel</span><span>Power Query</span><span>Power Pivot</span><span>DAX</span><span>PivotTables</span><span>PivotCharts</span><span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Seaborn</span><span>Plotly</span>
     </div>
   </div>
 
@@ -194,19 +247,19 @@
     <div class="label">Key Insights</div>
     <h2>What came out of it</h2>
     <ul>
-      <li>Total Sales reached ₹53.01M across 197.43K total orders, with an average rating of 4.34</li>
+      <li>Total Sales reached ₹53.01M across 197,430 total orders, with an average rating of ~4.3, confirmed identically by both the Excel and Python analyses</li>
       <li>Average order value stood at ₹268.51, backed by 5.59M customer ratings</li>
-      <li>Non-Veg orders made up 63% of total sales vs 37% for Veg</li>
-      <li>Bengaluru led all cities with ₹5.46M in sales, followed by Lucknow, Hyderabad, Mumbai, and New Delhi</li>
-      <li>Q2 recorded the highest quarterly sales at ₹19.9M, slightly ahead of Q1's ₹19.7M</li>
-      <li>Weekly sales trends show consistent performance with periodic peaks, useful for identifying high-demand periods</li>
+      <li>Bengaluru led all cities in both analyses, followed by Lucknow, Hyderabad, Mumbai, and New Delhi</li>
+      <li>Q2 recorded the highest quarterly sales, slightly ahead of Q1</li>
+      <li>Saturday was the strongest day of the week for revenue in the Python daily-trend breakdown</li>
+      <li>Veg vs Non-Veg share differed between the two analyses (Excel: 63% Non-Veg / 37% Veg vs. Python: 63% Veg / 37% Non-Veg) because each used a different classification method — a reminder that a BRD needs to define *how* a category is derived, not just *what* it's called</li>
     </ul>
   </div>
 
   <div class="block">
     <div class="label">Next Step</div>
     <h2>See it or take it further</h2>
-    <p>The full Excel workbook, raw data, and dashboard screenshots are on GitHub.</p>
+    <p>The full Excel workbook, Python notebook, raw data, and dashboard screenshots are all on GitHub.</p>
     <p><a href="https://github.com/swarparikh/Swiggy-Sales-Analysis" target="_blank" rel="noopener">View the repository on GitHub →</a></p>
   </div>
 
