@@ -77,6 +77,10 @@
   .nb-card .nb-bar a{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-dim); display:flex; align-items:center; gap:6px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px;}
   .nb-card .nb-bar a:hover{color:var(--crimson); border-color:var(--crimson);}
   .nb-card iframe{width:100%; height:760px; border:none; display:block; background:#fff;}
+  .bleed{width:100vw; position:relative; left:50%; margin-left:-50vw; padding:0 24px; box-sizing:border-box;}
+  .bleed .nb-card{max-width:1200px; margin:0 auto;}
+  .bleed .nb-card iframe{height:840px;}
+  @media (max-width:900px){ .bleed{padding:0 16px;} .bleed .nb-card iframe{height:560px;} }
   code{font-family:'JetBrains Mono',monospace; font-size:0.92em; background:var(--panel-2); padding:2px 6px; border-radius:3px; color:var(--bone);}
 
   footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
@@ -194,18 +198,15 @@
   <div class="block">
     <div class="label">Dashboard</div>
     <h2>The Excel result</h2>
-    <p>KPI cards, slicers for Month/Category/Restaurant, and seven interactive charts combined into a single executive dashboard view. Preview below, or scroll/zoom the live workbook itself.</p>
-    <img class="shot" src="https://raw.githubusercontent.com/swarparikh/Swiggy-Sales-Analysis/main/Dashboard/Dashboard.png" alt="Swiggy Sales Dashboard in Excel">
-    <div class="shot-caption">Static preview — KPI cards, slicers, and 7 interactive visuals</div>
-
-    <h3 style="font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin:32px 0 4px;">Live Workbook</h3>
-    <p>This is the actual <code>.xlsx</code> file rendered live from GitHub — same source Office would open, viewed read-only in the browser.</p>
-    <div class="nb-card">
-      <div class="nb-bar">
-        <span>Swiggy Data.xlsx</span>
-        <a href="https://github.com/swarparikh/Swiggy-Sales-Analysis/blob/main/Swiggy%20Data.xlsx" target="_blank" rel="noopener">Open ↗</a>
+    <p>KPI cards, slicers for Month/Category/Restaurant, and seven interactive charts combined into a single executive dashboard view — the actual <code>.xlsx</code> file, rendered live from GitHub.</p>
+    <div class="bleed">
+      <div class="nb-card">
+        <div class="nb-bar">
+          <span>Swiggy Data.xlsx</span>
+          <a href="https://github.com/swarparikh/Swiggy-Sales-Analysis/blob/main/Swiggy%20Data.xlsx" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fswarparikh%2FSwiggy-Sales-Analysis%2Fmain%2FSwiggy%2520Data.xlsx" loading="lazy" title="Swiggy Data Excel Dashboard"></iframe>
       </div>
-      <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fswarparikh%2FSwiggy-Sales-Analysis%2Fmain%2FSwiggy%2520Data.xlsx" loading="lazy" title="Swiggy Data Excel Dashboard"></iframe>
     </div>
   </div>
 
