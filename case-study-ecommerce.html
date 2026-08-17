@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecommerce Sales Dashboard — Case Study | Swar Parikh</title>
+<meta name="description" content="Case study: a Power BI dashboard tracking YTD sales performance for a US-based ecommerce company, built on MS SQL Server with DAX time intelligence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --carbon:#060505; --panel:#0D0B0B; --panel-2:#141010; --grid:#241C1C; --grid-soft:#1A1414;
+    --bone:#F2F0EA; --bone-dim:#A79E96; --bone-faint:#6E645E;
+    --crimson:#D7263D; --crimson-light:#F3A9B4; --radius:2px; --maxw:900px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--carbon); color:var(--bone); font-family:'Inter',sans-serif; line-height:1.7; -webkit-font-smoothing:antialiased;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:var(--crimson); text-decoration:none;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  ::selection{background:var(--crimson); color:var(--bone);}
+
+  header{padding:26px 0; border-bottom:1px solid var(--grid);}
+  header .wrap{display:flex; justify-content:space-between; align-items:center; max-width:1100px;}
+  .back-link{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone-dim); display:flex; align-items:center; gap:8px;}
+  .back-link:hover{color:var(--crimson);}
+  .site-logo{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--bone-dim);}
+
+  .hero{padding:90px 0 60px; position:relative; overflow:hidden;}
+  .hero .pattern-bg{position:absolute; inset:0; opacity:0.25; z-index:0;}
+  .hero .wrap{position:relative; z-index:1;}
+  .meta-row{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-faint); display:flex; gap:18px; flex-wrap:wrap; margin-bottom:22px;}
+  .meta-row span{display:flex; align-items:center; gap:6px;}
+  h1{font-family:'Fraunces',serif; font-weight:600; font-size:clamp(32px,5vw,54px); line-height:1.08; margin-bottom:20px; max-width:760px;}
+  .hero .sub{color:var(--bone-dim); font-size:16.5px; max-width:640px; margin-bottom:28px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag-row span{font-family:'JetBrains Mono',monospace; font-size:11px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px; color:var(--bone-dim);}
+
+  .metric-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--grid); border:1px solid var(--grid); margin:44px 0 0;}
+  .metric-strip .m{background:var(--panel); padding:22px 18px;}
+  .metric-strip .m .n{font-family:'Fraunces',serif; font-size:22px; color:var(--crimson); font-weight:600;}
+  .metric-strip .m .l{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--bone-faint); text-transform:uppercase; letter-spacing:0.04em; margin-top:5px;}
+  @media (max-width:700px){ .metric-strip{grid-template-columns:1fr 1fr;} }
+
+  main{padding-bottom:100px;}
+  .block{padding:44px 0; border-bottom:1px solid var(--grid-soft);}
+  .block:last-child{border-bottom:none;}
+  .block .label{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--crimson); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;}
+  .block h2{font-family:'Fraunces',serif; font-size:26px; font-weight:600; margin-bottom:16px;}
+  .block p{color:var(--bone-dim); font-size:15px; margin-bottom:14px; max-width:680px;}
+  .block ul{list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+  .block li{font-size:14.5px; color:var(--bone-dim); padding-left:20px; position:relative; max-width:680px;}
+  .block li::before{content:"›"; position:absolute; left:0; color:var(--crimson);}
+  .cols-2{display:grid; grid-template-columns:1fr 1fr; gap:40px;}
+  .cols-2 h3{font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:10px;}
+  @media (max-width:700px){ .cols-2{grid-template-columns:1fr;} }
+
+  .tech-grid{display:flex; flex-wrap:wrap; gap:10px;}
+  .tech-grid span{font-family:'JetBrains Mono',monospace; font-size:12.5px; border:1px solid var(--grid); padding:8px 16px; border-radius:20px; color:var(--bone);}
+
+  .shot{width:100%; border:1px solid var(--grid); border-radius:4px; margin-top:18px; display:block;}
+  .shot-caption{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint); margin-top:8px;}
+
+  footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
+  footer a:hover{color:var(--crimson);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html#projects" class="back-link">← Back to Portfolio</a>
+    <span class="site-logo">SWAR PARIKH / CASE STUDY</span>
+  </div>
+</header>
+
+<section class="hero">
+  <svg class="pattern-bg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice"><defs><pattern id="grid1" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M 34 0 L 0 0 0 34" fill="none" stroke="#D7263D" stroke-width="0.6" opacity="0.4"/></pattern></defs><rect width="800" height="400" fill="url(#grid1)"/></svg>
+  <div class="wrap">
+    <div class="meta-row">
+      <span>2026 · Personal Project</span>
+      <span>Category: Business Intelligence / Power BI</span>
+    </div>
+    <h1>Ecommerce Sales Dashboard — Case Study</h1>
+    <p class="sub">A Power BI dashboard tracking YTD sales performance for a US-based ecommerce company — connected directly to MS SQL Server, modeled across three tables, with DAX time-intelligence measures driving every KPI.</p>
+    <div class="tag-row">
+      <span>Power BI</span><span>MS SQL Server</span><span>Power Query</span><span>DAX</span><span>Time Intelligence</span>
+    </div>
+    <div class="metric-strip">
+      <div class="m"><div class="n">$11.53M</div><div class="l">YTD Sales</div></div>
+      <div class="m"><div class="n">$1.34M</div><div class="l">YTD Profit</div></div>
+      <div class="m"><div class="n">107.2K</div><div class="l">YTD Quantity</div></div>
+      <div class="m"><div class="n">11.28%</div><div class="l">YTD Profit Margin</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="block">
+    <div class="label">Overview</div>
+    <h2>What this project is</h2>
+    <p>This project is an interactive Power BI dashboard built for a US-based ecommerce company to track Year-To-Date sales performance. Data is pulled directly from MS SQL Server and flat files, modeled across three related tables, and enriched with DAX time-intelligence measures (YTD, PYTD, YoY) to surface category, regional, product, and shipping-level performance in a single executive view.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Business Problem</div>
+    <h2>Why it matters</h2>
+    <p>A US-based ecommerce company needed a single view of Year-To-Date sales performance — not just totals, but growth versus last year, which categories and products were winning or losing ground, which states and regions were driving revenue, and which shipping method customers actually used most. None of that is visible from raw transactional tables in SQL Server without a modeled, DAX-driven dashboard on top.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Requirements (BRD)</div>
+    <h2>What the dashboard needed to answer</h2>
+    <ul>
+      <li>Create a KPI Banner showing YTD Sales, YTD Profit, YTD Quantity Sold, and YTD Profit Margin</li>
+      <li>Find Year-on-Year growth for each KPI, with a YTD sparkline showing the monthly trend</li>
+      <li>Find YTD Sales, PYTD Sales, and YoY Sales growth by customer category, with a trend icon per category</li>
+      <li>Find YTD Sales performance by each state</li>
+      <li>Identify Top 5 and Bottom 5 products by sales</li>
+      <li>Break down YTD Sales by region to find the best and worst performing regions</li>
+      <li>Break down YTD Sales by shipping type to get the best shipping type percentage</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Dataset</div>
+    <h2>What the analysis is built on</h2>
+    <p>Ecommerce transaction data — orders, products, categories, customer segments, regions, states, and shipping types — imported into MS SQL Server and connected live to Power BI, alongside supporting flat files.</p>
+  </div>
+
+  <div class="block">
+    <div class="label">Methodology</div>
+    <h2>How it was approached</h2>
+    <div class="cols-2">
+      <div>
+        <h3>Process</h3>
+        <ul>
+          <li>Problem statement &amp; requirements gathering</li>
+          <li>Import data into MS SQL Server</li>
+          <li>Connect Power BI to the SQL database</li>
+          <li>Data cleaning in Power Query</li>
+          <li>Data modeling across three tables</li>
+          <li>Custom Date Table + time intelligence DAX</li>
+          <li>Visualization, dashboard build, and insights</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Power BI skills applied</h3>
+        <ul>
+          <li>Time intelligence — TOTALYTD, SAMEPERIODLASTYEAR</li>
+          <li>Dynamic, complex KPIs with conditional formatting</li>
+          <li>DAX — CALCULATE, SUMX, FILTER, VALUES, SELECTEDVALUE, VAR, DIVIDE</li>
+          <li>Dynamic trend icons per category</li>
+          <li>Map, donut, and table visualizations</li>
+          <li>Segment-level filtering (Consumer / Corporate / Home Office)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Dashboard</div>
+    <h2>The final result</h2>
+    <p>A KPI banner with YoY badges and sparklines, a segment toggle, a category performance table, top/bottom product charts, and region/state/shipping breakdowns — all on one screen.</p>
+    <img class="shot" src="https://raw.githubusercontent.com/swarparikh/Ecommerce-Sales-Dashboard/main/Screenshot%202024-03-22%20004748.png" alt="Ecommerce Sales Dashboard in Power BI">
+    <div class="shot-caption">Final Power BI dashboard — KPI banner, category table, product charts, region &amp; shipping breakdowns</div>
+  </div>
+
+  <div class="block">
+    <div class="label">Technology Used</div>
+    <h2>Tools & stack</h2>
+    <div class="tech-grid">
+      <span>Power BI</span><span>MS SQL Server</span><span>Power Query</span><span>DAX</span><span>Time Intelligence</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="label">Key Insights</div>
+    <h2>What came out of it</h2>
+    <ul>
+      <li>YTD Sales stood at $11.53M, down -0.83% YoY, while YTD Profit grew to $1.34M, up +4.50% YoY — profit growing even as revenue dipped slightly</li>
+      <li>YTD Profit Margin improved to 11.28%, up +5.37% YoY</li>
+      <li>YTD Quantity sold fell -7.29% YoY to 107.2K units — fewer units sold, but at a higher margin per unit</li>
+      <li>Office Supplies was the largest category by YTD Sales ($6.92M), followed by Furniture ($2.52M) and Technology ($2.10M); Office Supplies and Technology both declined YoY while Furniture grew</li>
+      <li>Staple envelope, Staples, and Easy-staple paper were the top 3 products by YTD Sales</li>
+      <li>West was the strongest region at 32.22% of YTD Sales, while South lagged at 16.17%</li>
+      <li>Standard Class dominated shipping at 60.51% of YTD Sales, followed by Second Class (19.22%) and First Class (15.1%)</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Next Step</div>
+    <h2>See it or take it further</h2>
+    <p>The full Power BI report and supporting files are on GitHub.</p>
+    <p><a href="https://github.com/swarparikh/Ecommerce-Sales-Dashboard" target="_blank" rel="noopener">View the repository on GitHub →</a></p>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Swar Parikh</span>
+  <a href="index.html#projects">← Back to Portfolio</a>
+</footer>
+
+</body>
+</html>
