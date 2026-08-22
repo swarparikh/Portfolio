@@ -63,6 +63,17 @@
   .shot{width:100%; border:1px solid var(--grid); border-radius:4px; margin-top:18px; display:block;}
   .shot-caption{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint); margin-top:8px;}
 
+  .nb-card{border:1px solid var(--grid); border-radius:6px; overflow:hidden; margin-top:22px; background:var(--panel);}
+  .nb-card .nb-bar{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:var(--panel-2); border-bottom:1px solid var(--grid);}
+  .nb-card .nb-bar span{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone); font-weight:500;}
+  .nb-card .nb-bar a{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-dim); display:flex; align-items:center; gap:6px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px;}
+  .nb-card .nb-bar a:hover{color:var(--crimson); border-color:var(--crimson);}
+  .nb-card iframe{width:100%; height:760px; border:none; display:block; background:#fff;}
+  .bleed{width:100vw; position:relative; left:50%; margin-left:-50vw; padding:0 24px; box-sizing:border-box;}
+  .bleed .nb-card{max-width:1200px; margin:0 auto;}
+  .bleed .nb-card iframe{height:700px;}
+  @media (max-width:900px){ .bleed{padding:0 16px;} .bleed .nb-card iframe{height:500px;} }
+
   footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
   footer a:hover{color:var(--crimson);}
 </style>
@@ -164,9 +175,16 @@
   <div class="block">
     <div class="label">Dashboard</div>
     <h2>The final result</h2>
-    <p>A KPI banner with YoY badges and sparklines, a segment toggle, a category performance table, top/bottom product charts, and region/state/shipping breakdowns — all on one screen.</p>
-    <img class="shot" src="https://raw.githubusercontent.com/swarparikh/Ecommerce-Sales-Dashboard/main/Screenshot%202024-03-22%20004748.png" alt="Ecommerce Sales Dashboard in Power BI">
-    <div class="shot-caption">Final Power BI dashboard — KPI banner, category table, product charts, region &amp; shipping breakdowns</div>
+    <p>A KPI banner with YoY badges and sparklines, a segment toggle, a category performance table, top/bottom product charts, and region/state/shipping breakdowns — interact with the live report below.</p>
+    <div class="bleed">
+      <div class="nb-card">
+        <div class="nb-bar">
+          <span>E Commerce.pbix</span>
+          <a href="https://app.powerbi.com/view?r=eyJrIjoiMGYzNmMzNGItMzYyYS00NGI1LWJjMTItNDI5NWZiNTE1YWNkIiwidCI6IjIyNmZhNjk2LWIyMzgtNDU5Mi1iM2YxLTQzZDE5OTUyYzk4OCJ9" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <iframe title="E Commerce" src="https://app.powerbi.com/view?r=eyJrIjoiMGYzNmMzNGItMzYyYS00NGI1LWJjMTItNDI5NWZiNTE1YWNkIiwidCI6IjIyNmZhNjk2LWIyMzgtNDU5Mi1iM2YxLTQzZDE5OTUyYzk4OCJ9" frameborder="0" allowFullScreen="true"></iframe>
+      </div>
+    </div>
   </div>
 
   <div class="block">

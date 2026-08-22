@@ -59,6 +59,17 @@
   .tech-grid{display:flex; flex-wrap:wrap; gap:10px;}
   .tech-grid span{font-family:'JetBrains Mono',monospace; font-size:12.5px; border:1px solid var(--grid); padding:8px 16px; border-radius:20px; color:var(--bone);}
 
+  .nb-card{border:1px solid var(--grid); border-radius:6px; overflow:hidden; margin-top:22px; background:var(--panel);}
+  .nb-card .nb-bar{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:var(--panel-2); border-bottom:1px solid var(--grid);}
+  .nb-card .nb-bar span{font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--bone); font-weight:500;}
+  .nb-card .nb-bar a{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--bone-dim); display:flex; align-items:center; gap:6px; border:1px solid var(--grid); padding:6px 12px; border-radius:20px;}
+  .nb-card .nb-bar a:hover{color:var(--crimson); border-color:var(--crimson);}
+  .nb-card iframe{width:100%; height:760px; border:none; display:block; background:#fff;}
+  .bleed{width:100vw; position:relative; left:50%; margin-left:-50vw; padding:0 24px; box-sizing:border-box;}
+  .bleed .nb-card{max-width:1200px; margin:0 auto;}
+  .bleed .nb-card iframe{height:700px;}
+  @media (max-width:900px){ .bleed{padding:0 16px;} .bleed .nb-card iframe{height:500px;} }
+
   footer{border-top:1px solid var(--grid); padding:36px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--bone-faint);}
   footer a:hover{color:var(--crimson);}
 </style>
@@ -171,6 +182,21 @@
       <li>Ranked players by Player of the Match consistency</li>
       <li>Mapped seasonal trends and win-pattern shifts across IPL history</li>
     </ul>
+  </div>
+
+  <div class="block">
+    <div class="label">Live Dashboard</div>
+    <h2>A Power BI layer on top of the analysis</h2>
+    <p>Alongside the Python EDA, the same IPL data was also modeled and visualized in Power BI — interact with the live report below.</p>
+    <div class="bleed">
+      <div class="nb-card">
+        <div class="nb-bar">
+          <span>IPL Data.pbix</span>
+          <a href="https://app.powerbi.com/view?r=eyJrIjoiYmY1ZjYyMjctYTk5ZC00MjA0LWEyMWUtOTc5M2U2ZGZmYTQxIiwidCI6IjIyNmZhNjk2LWIyMzgtNDU5Mi1iM2YxLTQzZDE5OTUyYzk4OCJ9" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <iframe title="IPL Data" src="https://app.powerbi.com/view?r=eyJrIjoiYmY1ZjYyMjctYTk5ZC00MjA0LWEyMWUtOTc5M2U2ZGZmYTQxIiwidCI6IjIyNmZhNjk2LWIyMzgtNDU5Mi1iM2YxLTQzZDE5OTUyYzk4OCJ9" frameborder="0" allowFullScreen="true"></iframe>
+      </div>
+    </div>
   </div>
 
   <div class="block">
